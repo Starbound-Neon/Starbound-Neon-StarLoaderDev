@@ -5,6 +5,7 @@
     "path": "/cursorTooltip/collectionsText",
     "value": "Starhub"
   },
+  // move beam button up to deploy button
   {
     "op": "copy",
     "path": "/mainBar/beam/pos",
@@ -15,6 +16,7 @@
     "path": "/mainBar/beam/poly",
     "from": "/mainBar/deploy/poly"
   },
+  // move deploy button up to mmUpgrade button
   {
     "op": "copy",
     "path": "/mainBar/deploy/pos",

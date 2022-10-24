@@ -14,14 +14,14 @@
       },
       "background": {
         "type": "background",
-        "fileBody": "/neon/starhub/gui/main.png"
+        "fileBody": "/neon/starloader/core/starhub/gui/main.png"
       }
     }
   },
   {
     "op": "replace",
     "path": "/scripts",
-    "value": ["/neon/starhub/gui/main.lua"]
+    "value": ["/neon/starloader/core/starhub/gui/main.lua"]
   },
   {
     "op": "replace",

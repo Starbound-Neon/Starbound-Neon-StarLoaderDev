@@ -1,7 +1,7 @@
 {
   "name" : "starloaderbody",
   "type" : "body",
-  "scripts" : ["cores/tech.lua"],
+  "scripts" : ["/tech.lua"],
   "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
   "shortDescription" : "StarLoader Body",
   "description" : "Functional grabber",

@@ -1,0 +1,9 @@
+{
+    "modules": {
+        "Event": {
+            "description": "Eventmanager for StarLoader",
+            "path": "/starloader/modules/event.lua",
+            "options": {}
+        }
+    }
+}

@@ -47,7 +47,7 @@ function update(dt)
     pane.addWidget({
       zlevel = 0,
       type = "image",
-      file = "/neon/starhub/gui/pixel.png?multiply=000000BF?scalenearest=" .. screen_size_x .. ";" .. screen_size_y
+      file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BF?scalenearest=" .. screen_size_x .. ";" .. screen_size_y
     })
     
     local sidebar_width = math.min(700, screen_size_x / 3)
@@ -55,14 +55,14 @@ function update(dt)
     pane.addWidget({
       zlevel = 1,
       type = "image",
-      file = "/neon/starhub/gui/pixel.png?multiply=0000007F?scalenearest=" .. sidebar_width .. ";" .. screen_size_y
+      file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=0000007F?scalenearest=" .. sidebar_width .. ";" .. screen_size_y
     })
   end
 end
 
 
 function cursorOverride(screenPosition)
-  return "/neon/starhub/gui/cursor/neon.cursor"
+  return "/neon/starloader/core/starhub/gui/cursor/neon.cursor"
 end
 
 

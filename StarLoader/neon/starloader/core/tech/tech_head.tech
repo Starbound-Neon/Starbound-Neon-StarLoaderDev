@@ -1,7 +1,7 @@
 {
   "name" : "starloaderhead",
   "type" : "head",
-  "scripts" : ["/tech.lua"],
+  "scripts" : ["tech.lua"],
   "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
   "shortDescription" : "StarLoader Head",
   "description" : "Functional grabber",

@@ -1,7 +1,7 @@
 {
   "name" : "starloaderlegs",
   "type" : "legs",
-  "scripts" : ["cores/tech.lua"],
+  "scripts" : ["/tech.lua"],
   "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
   "shortDescription" : "StarLoader Legs",
   "description" : "Functional grabber",

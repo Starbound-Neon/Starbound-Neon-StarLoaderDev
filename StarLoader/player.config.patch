@@ -16,7 +16,7 @@
 	},
 	{
 		"op": "add",
-		"path": "/genericScriptContexts/starloader/core",
+		"path": "/genericScriptContexts/starloader",
 		"value" : "/neon/starloader/core/generic.lua"
 	}
 ]

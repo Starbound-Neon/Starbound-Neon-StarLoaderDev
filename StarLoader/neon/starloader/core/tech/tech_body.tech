@@ -1,0 +1,10 @@
+{
+  "name" : "starloaderbody",
+  "type" : "body",
+  "scripts" : ["cores/tech.lua"],
+  "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
+  "shortDescription" : "StarLoader Body",
+  "description" : "Functional grabber",
+  "rarity" : "Legendary",
+  "icon" : "/items/generic/other/techcard.png"
+}

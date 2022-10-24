@@ -1,0 +1,10 @@
+{
+  "name" : "starloaderlegs",
+  "type" : "legs",
+  "scripts" : ["cores/tech.lua"],
+  "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
+  "shortDescription" : "StarLoader Legs",
+  "description" : "Functional grabber",
+  "rarity" : "Legendary",
+  "icon" : "/items/generic/other/techcard.png"
+}

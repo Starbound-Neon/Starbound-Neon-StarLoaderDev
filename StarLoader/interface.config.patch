@@ -1,0 +1,42 @@
+[
+  // TODO: fix collections button copying position modified by Quickbar if it is installed
+  {
+    "op": "replace",
+    "path": "/cursorTooltip/collectionsText",
+    "value": "Starhub"
+  },
+  {
+    "op": "copy",
+    "path": "/mainBar/beam/pos",
+    "from": "/mainBar/deploy/pos"
+  },
+  {
+    "op": "copy",
+    "path": "/mainBar/beam/poly",
+    "from": "/mainBar/deploy/poly"
+  },
+  {
+    "op": "copy",
+    "path": "/mainBar/deploy/pos",
+    "from": "/mainBar/mmUpgrade/pos"
+  },
+  {
+    "op": "copy",
+    "path": "/mainBar/deploy/poly",
+    "from": "/mainBar/mmUpgrade/poly"
+  },
+  // remove M.M. Upgrade button and use it to keep big PNG loaded
+  {
+    "op": "replace",
+    "path": "/mainBar/mmUpgrade",
+    "value": {
+      "base": "/neon/starhub/main.png",
+      "hover": "",
+      "open": "",
+      "openHover": "",
+      "disabled": "",
+      "pos": [0, 0],
+      "poly": []
+    }
+  }
+]

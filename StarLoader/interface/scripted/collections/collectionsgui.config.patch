@@ -1,0 +1,31 @@
+[
+  {
+    "op": "copy",
+    "path": "/_",
+    "from": ""
+  },
+  {
+    "op": "replace",
+    "path": "/gui",
+    "value": {
+      "panefeature": {
+        "type": "panefeature",
+        "anchor": "bottomLeft"
+      },
+      "background": {
+        "type": "background",
+        "fileBody": "/neon/starhub/gui/main.png"
+      }
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/scripts",
+    "value": ["/neon/starhub/gui/main.lua"]
+  },
+  {
+    "op": "replace",
+    "path": "/scriptDelta",
+    "value": 1
+  }
+]

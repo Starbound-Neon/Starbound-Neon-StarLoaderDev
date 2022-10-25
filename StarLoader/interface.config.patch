@@ -1,14 +1,21 @@
 [
   [
+    // if Quickbar is installed move the button back to the horizontal offset of the other buttons
     {
       "op": "test",
       "path": "/cursorTooltip/mmUpgradeText",
       "value": "Quickbar"
     },
+    // why tf does copy crash the game here??
+    // {
+    //   "op": "copy",
+    //   "path": "/mainBar/mmUpgrade/pos/0",
+    //   "from": "/mainBar/beam/pos/0"
+    // }
     {
-      "op": "copy",
+      "op": "replace",
       "path": "/mainBar/mmUpgrade/pos/0",
-      "from": "/mainBar/beam/pos/0"
+      "value": 0
     }
   ],
   [
@@ -64,7 +71,7 @@
       "op": "replace",
       "path": "/mainBar/mmUpgrade",
       "value": {
-        "base": "/neon/starhub/main.png",
+        "base": "/neon/starloader/core/starhub/gui/main.png",
         "hover": "",
         "open": "",
         "openHover": "",

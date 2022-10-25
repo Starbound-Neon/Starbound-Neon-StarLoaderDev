@@ -6,16 +6,14 @@
       "path": "/cursorTooltip/mmUpgradeText",
       "value": "Quickbar"
     },
-    // why tf does copy crash the game here??
-    // {
-    //   "op": "copy",
-    //   "path": "/mainBar/mmUpgrade/pos/0",
-    //   "from": "/mainBar/beam/pos/0"
-    // }
     {
-      "op": "replace",
+      "op": "remove",
+      "path": "/mainBar/mmUpgrade/pos/0"
+    },
+    {
+      "op": "copy",
       "path": "/mainBar/mmUpgrade/pos/0",
-      "value": 0
+      "from": "/mainBar/beam/pos/0"
     }
   ],
   [

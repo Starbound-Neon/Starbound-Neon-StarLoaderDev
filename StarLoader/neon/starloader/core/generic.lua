@@ -26,10 +26,8 @@ local function checkTechSlots()
             player.makeTechAvailable(techName)
             player.enableTech(techName)
             player.equipTech(techName)
-            sb.logInfo('generic.lua: TESTNIGGER 2')
             slotFound = true
         elseif equippedTech == 'starloader' .. slot then
-            sb.logInfo('generic.lua: TESTNIGGER 1')
             slotFound = true
         end
     end
@@ -57,7 +55,7 @@ local function checkTechSlots()
                 else
                     absolutePath = techPath:match("(.*/)") .. script
                 end
-                sb.logInfo('generic.lua: NIGGER ' .. absolutePath)
+                --sb.logInfo('generic.lua: ' .. absolutePath)
 
                 -- fake environment
                 local env = {}

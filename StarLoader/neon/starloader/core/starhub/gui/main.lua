@@ -16,7 +16,6 @@ end
 
 
 function displayed()
-  firstrun = true
 end
 
 
@@ -56,9 +55,7 @@ function update(dt)
   --scan_x(screen_size_max[1], screen_size_max[1] / 2)
   --scan_y(screen_size_max[2], screen_size_max[2] / 2)
 
-  if screen_size_x > 0 and screen_size_y > 0 and firstrun == true then
-    firstrun = false
-
+  if screen_size_x > 0 and screen_size_y > 0 then
     populate()
   end
 end

@@ -15,6 +15,12 @@
       "background": {
         "type": "background",
         "fileBody": "/neon/starloader/core/starhub/gui/main.png"
+      },
+      "back": {
+        "type": "image"
+      },
+      "sidebar": {
+        "type": "image"
       }
     }
   },

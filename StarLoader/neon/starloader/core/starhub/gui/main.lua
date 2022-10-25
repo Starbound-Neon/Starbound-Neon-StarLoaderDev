@@ -1,3 +1,23 @@
+local screen_size_x = 1000
+local screen_size_y = 800
+
+
+local function populate()
+  pane.addWidget({
+    zlevel = 0,
+    type = "image",
+    file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BF?scalenearest=" .. screen_size_x .. ";" .. screen_size_y
+  })
+  
+  local sidebar_width = math.min(700, screen_size_x / 3)
+
+  pane.addWidget({
+    zlevel = 1,
+    type = "image",
+    file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=0000007F?scalenearest=" .. sidebar_width .. ";" .. screen_size_y
+  })
+end
+
 
 function init()
 end
@@ -41,25 +61,13 @@ function update(dt)
   end
 
   --local screen_size_max = root.imageSize(config.getParameter("gui.background.fileBody"))
-  local screen_size_x = 1000--scan_x(screen_size_max[1], screen_size_max[1] / 2)
-  local screen_size_y = 800--scan_y(screen_size_max[2], screen_size_max[2] / 2)
+  --scan_x(screen_size_max[1], screen_size_max[1] / 2)
+  --scan_y(screen_size_max[2], screen_size_max[2] / 2)
 
   if screen_size_x > 0 and screen_size_y > 0 and firstrun == true then
     firstrun = false
-    
-    pane.addWidget({
-      zlevel = 0,
-      type = "image",
-      file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BF?scalenearest=" .. screen_size_x .. ";" .. screen_size_y
-    })
-    
-    local sidebar_width = math.min(700, screen_size_x / 3)
 
-    pane.addWidget({
-      zlevel = 1,
-      type = "image",
-      file = "/neon/starloader/core/starhub/gui/pixel.png?multiply=0000007F?scalenearest=" .. sidebar_width .. ";" .. screen_size_y
-    })
+    populate()
   end
 end
 

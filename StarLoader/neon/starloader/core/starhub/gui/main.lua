@@ -1,5 +1,5 @@
-local screen_size_x = math.ceil(1680 / 2)
-local screen_size_y = math.ceil( 987 / 2)
+local screen_size_x = math.ceil(1730)--1680 / 2)--1730
+local screen_size_y = math.ceil(685)--987 / 2)--685
 
 
 local function populate()
@@ -7,6 +7,7 @@ local function populate()
   
   local sidebar_width = math.min(350, screen_size_x / 3)
   local label_length = math.min(100, screen_size_y / 8)
+  local label_content = label_length - 20
 
   widget.setImage("sidebar", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. sidebar_width .. ";" .. screen_size_y)
 
@@ -14,8 +15,14 @@ local function populate()
   widget.setPosition("sidebar_header", {0,(screen_size_y - label_length)})
 
   local size = root.imageSize("/neon/starloader/core/starhub/gui/starhub.png")
-  widget.setImage("sidebar_logo", "/neon/starloader/core/starhub/gui/starhub.png?scale=" .. math.min(sidebar_width / (size[1] / 2), label_length / (size[2] / 2)))
-  widget.setPosition("sidebar_logo", {0,(screen_size_y - label_length)})
+  size[1] = size[1] / 2
+  size[2] = size[2] / 2
+
+  widget.setImage("sidebar_logo", "/neon/starloader/core/starhub/gui/starhub.png?scale=" .. math.min((sidebar_width - 20) / size[1], label_content / size[2]))
+  
+  local adjustedsize = size[1] * math.min((sidebar_width - 20) / size[1], label_content / size[2])
+
+  widget.setPosition("sidebar_logo", {((sidebar_width - adjustedsize)/2),(screen_size_y - label_length + 10)})
 
   widget.setImage("sidebar_footer", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000FF?scalenearest=" .. sidebar_width .. ";" .. label_length)
 

@@ -32,6 +32,11 @@
         "type": "image",
         "zlevel": 2
       },
+      "sidebar_logo": {
+        "type": "image",
+        "zlevel": 3,
+        "scale": 0.5
+      },
       "sidebar_footer": {
         "type": "image",
         "zlevel": 2

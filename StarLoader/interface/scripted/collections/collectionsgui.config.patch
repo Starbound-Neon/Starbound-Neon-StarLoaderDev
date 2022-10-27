@@ -17,10 +17,24 @@
         "fileBody": "/neon/starloader/core/starhub/gui/main.png"
       },
       "back": {
-        "type": "image"
+        "type": "image",
+        "zlevel": 0
       },
       "sidebar": {
-        "type": "image"
+        "type": "image",
+        "zlevel": 1
+      },
+      "lineseperator": {
+        "type": "image",
+        "zlevel": 3
+      },
+      "sidebar_header": {
+        "type": "image",
+        "zlevel": 2
+      },
+      "sidebar_footer": {
+        "type": "image",
+        "zlevel": 2
       }
     }
   },

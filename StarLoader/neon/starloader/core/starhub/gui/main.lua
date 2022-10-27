@@ -1,17 +1,23 @@
-local screen_size_x = 1000
-local screen_size_y = 800
+local screen_size_x = 1730
+local screen_size_y = 685
 
 
 local function populate()
-  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000099?scalenearest=" .. screen_size_x .. ";" .. screen_size_y)
+  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. screen_size_x .. ";" .. screen_size_y)
   
-  local sidebar_width = math.min(700, screen_size_x / 3)
+  local sidebar_width = math.min(350, screen_size_x / 3)
+  local label_length = math.min(100, screen_size_y / 10)
 
-  widget.setImage("sidebar", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000AA?scalenearest=" .. sidebar_width .. ";" .. screen_size_y)
-  widget.setImage("lineseperator", "/neon/starloader/core/starhub/gui/line.png?scale=" .. "100" .. ";" .. "200")
-  --widget.setPosition("lineseperator", {sidebar_width,0})
+  widget.setImage("sidebar", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. sidebar_width .. ";" .. screen_size_y)
+
+  widget.setImage("sidebar_header", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000FF?scalenearest=" .. sidebar_width .. ";" .. label_length)
+  widget.setPosition("sidebar_header", {0,(screen_size_y - label_length)})
+
+  widget.setImage("sidebar_footer", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000FF?scalenearest=" .. sidebar_width .. ";" .. label_length)
+
+  widget.setImage("lineseperator", "/neon/starloader/core/starhub/gui/line.png?multiply=00000000?scale=" .. 1 .. ";" .. screen_size_y) --?multiply=00000000
+  widget.setPosition("lineseperator", {sidebar_width,0})
 end
-
 
 
 function init()

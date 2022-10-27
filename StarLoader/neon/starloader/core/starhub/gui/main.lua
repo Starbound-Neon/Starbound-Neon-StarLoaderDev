@@ -3,12 +3,15 @@ local screen_size_y = 800
 
 
 local function populate()
-  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BF?scalenearest=" .. screen_size_x .. ";" .. screen_size_y)
+  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000099?scalenearest=" .. screen_size_x .. ";" .. screen_size_y)
   
   local sidebar_width = math.min(700, screen_size_x / 3)
 
-  widget.setImage("sidebar", "/neon/starloader/core/starhub/gui/pixel.png?multiply=0000007F?scalenearest=" .. sidebar_width .. ";" .. screen_size_y)
+  widget.setImage("sidebar", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000AA?scalenearest=" .. sidebar_width .. ";" .. screen_size_y)
+  widget.setImage("lineseperator", "/neon/starloader/core/starhub/gui/line.png?scale=" .. "100" .. ";" .. "200")
+  --widget.setPosition("lineseperator", {sidebar_width,0})
 end
+
 
 
 function init()

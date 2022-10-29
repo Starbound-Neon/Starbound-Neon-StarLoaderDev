@@ -4,7 +4,7 @@ local screen_size_max = {9600,4320}--root.imageSize(config.getParameter("gui.bac
 local firstupdate = true
 
 local function populate()
-  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. screen_size_max[1] .. ";" .. screen_size_max[2])
+  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. 9600 .. ";" .. 4320)
   
   local sidebar_width = math.min(350, screen_size_x / 3)
   local label_length = math.min(100, screen_size_y / 8)
@@ -30,7 +30,6 @@ local function populate()
   widget.setImage("separator", "/neon/starloader/core/starhub/gui/line.png?multiply=00000000?scale=" .. 1 .. ";" .. screen_size_y / 2) --?multiply=00000000
   widget.setPosition("separator", {sidebar_width, 0})
 end
-
 
 function init()
 end
@@ -60,6 +59,7 @@ function update(dt)
     end
     return scan_x(x - i, i / 2)
   end
+  
   local function scan_y(y, i)
     if i < 1 then
       if getChildAt({0, y}) then
@@ -68,20 +68,28 @@ function update(dt)
       return y - 1
     end
     if getChildAt({0, y}) then
+      sb.logInfo(y .. " was in range")
       return scan_y(y + i, i / 2)
     end
+    sb.logInfo(y .. " was out of range")
     return scan_y(y - i, i / 2)
   end
   if firstupdate then
-    local screen_size_x = scan_x(screen_size_max[1], screen_size_max[1] / 2)
-    local screen_size_y = scan_y(screen_size_max[2], screen_size_max[2] / 2)
-    if screen_size_x < 1 then screen_size_x = 1 end
-    if screen_size_y < 1 then screen_size_y = 1 end
-    firstupdate = false
+    local test = widget.getChildAt({1000, 0})
+    local scx = scan_x(screen_size_max[1], screen_size_max[1] / 2)
+    local scy = scan_y(screen_size_max[2], screen_size_max[2] / 2)
+    sb.logInfo(test or "nothing?")
+    sb.logInfo("x:" .. scx .. " | y:" .. scy)
+    if scx < 1 then scx = 1 end
+    if scy < 1 then scy = 1 end
+    if screen_size_x == scx and screen_size_y == scy then
+      firstupdate = false
+    end
+    screen_size_x = scx
+    screen_size_y = scy
   end
 
 
-  
   if screen_size_x > 0 and screen_size_y > 0 and firstupdate == false then
     populate()
   end

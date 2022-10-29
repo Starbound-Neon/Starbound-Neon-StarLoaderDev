@@ -1,9 +1,10 @@
 local screen_size_x = math.ceil(1730)--1680 / 2)--1730
 local screen_size_y = math.ceil(685)--987 / 2)--685
-
+local screen_size_max = {9600,4320}--root.imageSize(config.getParameter("gui.background.fileBody"))
+local firstupdate = true
 
 local function populate()
-  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. screen_size_x .. ";" .. screen_size_y)
+  widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. screen_size_max[1] .. ";" .. screen_size_max[2])
   
   local sidebar_width = math.min(350, screen_size_x / 3)
   local label_length = math.min(100, screen_size_y / 8)
@@ -36,6 +37,7 @@ end
 
 
 function displayed()
+  firstupdate = true
 end
 
 
@@ -45,7 +47,7 @@ end
 
 function update(dt)
   local getChildAt = widget.getChildAt
-  
+
   local function scan_x(x, i)
     if i < 1 then
       if getChildAt({x, 0}) then
@@ -70,14 +72,20 @@ function update(dt)
     end
     return scan_y(y - i, i / 2)
   end
+  if firstupdate then
+    local screen_size_x = scan_x(screen_size_max[1], screen_size_max[1] / 2)
+    local screen_size_y = scan_y(screen_size_max[2], screen_size_max[2] / 2)
+    if screen_size_x < 1 then screen_size_x = 1 end
+    if screen_size_y < 1 then screen_size_y = 1 end
+    firstupdate = false
+  end
 
-  --local screen_size_max = root.imageSize(config.getParameter("gui.background.fileBody"))
-  --scan_x(screen_size_max[1], screen_size_max[1] / 2)
-  --scan_y(screen_size_max[2], screen_size_max[2] / 2)
 
-  if screen_size_x > 0 and screen_size_y > 0 then
+  
+  if screen_size_x > 0 and screen_size_y > 0 and firstupdate == false then
     populate()
   end
+
 end
 
 

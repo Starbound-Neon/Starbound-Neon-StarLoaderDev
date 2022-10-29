@@ -24,7 +24,7 @@
         "type": "image",
         "zlevel": 1
       },
-      "lineseperator": {
+      "separator": {
         "type": "image",
         "zlevel": 3
       },

@@ -22,12 +22,12 @@ local function populate()
   
   local adjustedsize = size[1] * math.min((sidebar_width - 20) / size[1], label_content / size[2])
 
-  widget.setPosition("sidebar_logo", {((sidebar_width - adjustedsize)/2),(screen_size_y - label_length + 10)})
+  widget.setPosition("sidebar_logo", {((sidebar_width - adjustedsize) / 2),(screen_size_y - label_length + 10)})
 
   widget.setImage("sidebar_footer", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000FF?scalenearest=" .. sidebar_width .. ";" .. label_length)
 
-  widget.setImage("lineseperator", "/neon/starloader/core/starhub/gui/line.png?multiply=00000000?scale=" .. 1 .. ";" .. screen_size_y / 2) --?multiply=00000000
-  widget.setPosition("lineseperator", {sidebar_width,0})
+  widget.setImage("separator", "/neon/starloader/core/starhub/gui/line.png?multiply=00000000?scale=" .. 1 .. ";" .. screen_size_y / 2) --?multiply=00000000
+  widget.setPosition("separator", {sidebar_width, 0})
 end
 
 

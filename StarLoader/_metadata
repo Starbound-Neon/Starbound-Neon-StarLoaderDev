@@ -3,6 +3,6 @@
   "description" : "Starloader Alpha Multiplayer compatible",
   "friendlyName" : "StarLoader",
   "name" : "starloader",
-  "priority" : 1337,
+  "priority" : 100,
   "version" : "Alpha 1.0"
 }

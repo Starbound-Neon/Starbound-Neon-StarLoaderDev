@@ -1,7 +1,10 @@
 local screen_size_x = math.ceil(1730)--1680 / 2)--1730
 local screen_size_y = math.ceil(685)--987 / 2)--685
 local screen_size_max = {9600,4320}--root.imageSize(config.getParameter("gui.background.fileBody"))
+local min_valid_resolution = {100,100}
 local firstupdate = true
+local check_interval = 1 -- check every 5 seconds
+local timer = 0
 
 local function populate()
   widget.setImage("back", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000BB?scalenearest=" .. 9600 .. ";" .. 4320)
@@ -32,11 +35,12 @@ local function populate()
 end
 
 function init()
+  firstupdate = true
 end
 
 
 function displayed()
-  firstupdate = true
+  firstupdate = false
 end
 
 
@@ -44,56 +48,63 @@ function createTooltip(screenPosition)
 end
 
 
-function update(dt)
-  local getChildAt = widget.getChildAt
+local function scan_x(x, i, step)
+  if i < 1 then
+    if widget.getChildAt({x, 0}) then
+      return x
+    end
+    return x - step
+  end
+  local child = widget.getChildAt({x, 0})
+  if child then
+    return scan_x(x + i, i / 2, step)
+  end
+  return scan_x(x - i, i / 2, -step)
+end
 
-  local function scan_x(x, i)
-    if i < 1 then
-      if getChildAt({x, 0}) then
-        return x
-      end
-      return x - 1
+local function scan_y(y, i, step)
+  if i < 1 then
+    if widget.getChildAt({0, y}) then
+      return y
     end
-    if getChildAt({x, 0}) then
-      return scan_x(x + i, i / 2)
-    end
-    return scan_x(x - i, i / 2)
+    return y - step
   end
-  
-  local function scan_y(y, i)
-    if i < 1 then
-      if getChildAt({0, y}) then
-        return y
-      end
-      return y - 1
-    end
-    if getChildAt({0, y}) then
-      sb.logInfo(y .. " was in range")
-      return scan_y(y + i, i / 2)
-    end
-    sb.logInfo(y .. " was out of range")
-    return scan_y(y - i, i / 2)
+  local child = widget.getChildAt({0, y})
+  if child then
+    return scan_y(y + i, i / 2, step)
   end
+  return scan_y(y - i, i / 2, -step)
+end
+
+function update(dt)
   if firstupdate then
-    local test = widget.getChildAt({1000, 0})
-    local scx = scan_x(screen_size_max[1], screen_size_max[1] / 2)
-    local scy = scan_y(screen_size_max[2], screen_size_max[2] / 2)
-    sb.logInfo(test or "nothing?")
-    sb.logInfo("x:" .. scx .. " | y:" .. scy)
-    if scx < 1 then scx = 1 end
-    if scy < 1 then scy = 1 end
+    local scx = scan_x(screen_size_max[1], screen_size_max[1] / 2, -1)
+    local scy = scan_y(screen_size_max[2], screen_size_max[2] / 2, -1)
+    if scx < min_valid_resolution[1] then scx = min_valid_resolution[1] end
+    if scy < min_valid_resolution[2] then scy = min_valid_resolution[2] end
     if screen_size_x == scx and screen_size_y == scy then
       firstupdate = false
     end
+    if scx > screen_size_max[1] then scx = screen_size_max[1] end
+    if scy > screen_size_max[2] then scy = screen_size_max[2] end
     screen_size_x = scx
     screen_size_y = scy
+  end
+  timer = timer + dt
+  if timer >= check_interval then
+    timer = 0
+    local ToSmall = widget.getChildAt({screen_size_x-1, screen_size_y-1})
+    local ToBig = widget.getChildAt({screen_size_x+1, screen_size_y+1})
+    if ToSmall and not ToBig then
+    else
+      firstupdate = true
+    end
   end
 
 
   if screen_size_x > 0 and screen_size_y > 0 and firstupdate == false then
     populate()
   end
-
 end
 
 

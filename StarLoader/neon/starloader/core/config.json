@@ -1,0 +1,12 @@
+{
+    "name" : "StarLoader",
+    "logname" : " STARLOADER ",
+    "version" : "0.0.1c",
+    "thirdpartyenabled" : true,
+    "thirdpartymods": {
+        "hasibound" : {
+            "Description" : "Hasibound is a powerful dll with lots of new features!",
+            "unsafekey" : "unsafe"
+        }
+    }
+}

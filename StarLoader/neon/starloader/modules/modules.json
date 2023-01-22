@@ -1,13 +1,16 @@
 {
     "modules": {
         "Test": {
+            "author": "StarLoader",
             "description": "StarLoader Test Module",
             "path": "/neon/starloader/modules/test.lua",
+            "logo": "/neon/starloader/core/starhub/gui/cursor/neon.png",
             "options": {
                 "autostart": true
             },
             "tables": {
-                "tech":false
+                "tech":true,
+                "localAnimator":true
             }
         }
     }

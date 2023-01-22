@@ -24,6 +24,10 @@
         "type": "image",
         "zlevel": 1
       },
+      "sidebarscrollarea": {
+        "type": "scrollArea",
+        "zlevel": 2
+      },
       "separator": {
         "type": "image",
         "zlevel": 3

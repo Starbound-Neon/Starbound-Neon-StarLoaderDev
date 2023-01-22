@@ -1,7 +1,7 @@
 {
     "name" : "StarLoader",
     "logname" : " STARLOADER ",
-    "version" : "0.0.1c",
+    "version" : "0.0.1d",
     "thirdpartyenabled" : true,
     "thirdpartymods": {
         "hasibound" : {

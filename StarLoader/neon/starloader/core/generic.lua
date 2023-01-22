@@ -2,8 +2,14 @@
 local mainconfig
 
 local moduleconf
-local modulefuncs = {modulename = {}, init = {}, update = {}, uninit = {}, tables = {}}
+local modulefuncs = {modulename = {}, init = {}, update = {}, uninit = {}, options = {}, tables = {}}
 local firstupdate = true
+
+local moduleIntervals = {}
+local coroutines = {}
+local intervals = {}
+local lastRan = {}
+
 
 function init(...)
     getConfig()
@@ -22,10 +28,16 @@ function init(...)
     end
 end
 
+-- Define a function to create and start a new coroutine
+function scheduleCoroutine(func, interval, ...)
+    local co = coroutine.create(func)
+    table.insert(coroutines, co)
+    coroutine.resume(co, ...)
+end
+
 function update(...)
-
+    local currentTime = os.clock()
     -- Run the table access procedure
-
     if not tech then
         tech = os.__tech
     end
@@ -33,13 +45,10 @@ function update(...)
         localAnimator = os.__localAnimator
     end
     -- Run the modules
-
     local update = modulefuncs.update
-    --local tables = modulefuncs.tables
     for i = 1, #update do
         local canrun = true
         for table, enabled in pairs(modulefuncs.tables[i]) do
-            --sb.logInfo("%s | %s",table, enabled)
             if table == "tech" and enabled == true and not tech then
                 canrun = false
             end
@@ -48,13 +57,28 @@ function update(...)
             end
         end
         if canrun == true then
-            update[i](...)
+            -- Schedule a new coroutine for the current update function
+            scheduleCoroutine(update[i], ...)
         end 
         if canrun == false and firstupdate then
-           sb.logWarn("\n["..mainconfig["logname"].."] [%s] Module dependency missing or could not load!\n["..mainconfig["logname"].."] [%s] Please check your modules.json or .patch file.",modulefuncs.modulename[i],modulefuncs.modulename[i])
+            sb.logWarn("\n["..mainconfig["logname"].."] [%s] Module dependency missing or could not load!\n["..mainconfig["logname"].."] [%s] Please check your modules.json or .patch file.",modulefuncs.modulename[i],modulefuncs.modulename[i])
         end
     end
     firstupdate = false
+
+    -- Iterate over the coroutines table
+    for i = #coroutines, 1, -1 do
+        local co = coroutines[i]
+        if coroutine.status(co) == "dead" then
+            -- If the coroutine is dead, remove it from the tables
+            table.remove(coroutines, i)
+            intervals[co] = nil
+            lastRan[co] = nil
+        else
+            -- Resume the coroutine
+            coroutine.resume(co)
+        end
+    end
 end
 
 function uninit(...)
@@ -74,6 +98,9 @@ function getConfig()
     local thirdpartyenabled = mainconfig["thirdpartyenabled"]
     local thirdpartymods = mainconfig["thirdpartymods"]
     sb.logInfo("\n["..mainconfig["logname"].."] [INIT] Reading Config: \n["..mainconfig["logname"].."] [INIT] Name: " .. name .. "\n["..mainconfig["logname"].."] [INIT] Version: " .. version .. "\n["..mainconfig["logname"].."] [INIT] Thirdpartymods: %s", thirdpartyenabled)
+
+    --publish the mainconfig to all other lua scripts into the os table
+    os.__slmainconfig = mainconfig
     return mainconfig
 end
 
@@ -98,12 +125,17 @@ function getModules()
     moduleconf = root.assetJson("/neon/starloader/modules/modules.json")
     for modulename, moduleparams in next, moduleconf.modules do
         local name = modulename
+        local author = moduleparams["author"] or "unknown"
         local path = moduleparams["path"]
         local description = moduleparams["description"] or "No description."
+        local logo = moduleparams["logo"] or "assetmissing.png"
         local options = moduleparams["options"]
         local tables = moduleparams["tables"]
-        sb.logInfo("\n["..mainconfig["logname"].."] [INIT] Reading Module: \n["..mainconfig["logname"].."] [INIT] Name: " .. name .. "\n["..mainconfig["logname"].."] [INIT] Path: " .. path .. "\n["..mainconfig["logname"].."] [INIT] Description: " .. description .. "\n["..mainconfig["logname"].."] [INIT] Options: %s \n["..mainconfig["logname"].."] [INIT] Tables: %s", options, tables)
+        sb.logInfo("\n["..mainconfig["logname"].."] [INIT] Reading Module: \n["..mainconfig["logname"].."] [INIT] Name: " .. name .. "\n["..mainconfig["logname"].."] [INIT] Author: " .. author .. "\n["..mainconfig["logname"].."] [INIT] Path: " .. path .. "\n["..mainconfig["logname"].."] [INIT] Description: " .. description .. "\n["..mainconfig["logname"].."] [INIT] Options: %s \n["..mainconfig["logname"].."] [INIT] Tables: %s", options, tables)
     end
+
+    --publish the moduleconf to all other lua scripts into the os table
+    os.__slmoduleconf = moduleconf
     return moduleconf
 end
 
@@ -118,6 +150,7 @@ function loadModules()
             table.insert(modulefuncs.init,       init)
             table.insert(modulefuncs.update,     update)
             table.insert(modulefuncs.uninit,     uninit)
+            table.insert(modulefuncs.options,    moduleparams["options"])
             table.insert(modulefuncs.tables,     moduleparams["tables"])
 
             init, update, uninit = _init, _update, _uninit

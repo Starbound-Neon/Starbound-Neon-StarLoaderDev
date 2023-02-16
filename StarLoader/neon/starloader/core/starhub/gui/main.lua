@@ -60,56 +60,24 @@ local function populate()
 
     -- Check if StarLoader has given its Modules to StarHub
     if slModuleConf then
-      sidebarobjects = {authorname = {}, modulename = {}, modulepath = {}, moduledescription = {}, modulelogo = {}, moduleoptions = {}, moduletables = {}}
+      sidebarobjects = {}
       --sb.logInfo("test")
       moduleindex = 0
       for modulename, moduleparams in next, slModuleConf.modules do
-        local name = modulename
         local author = moduleparams["author"] or "unknown"
-        local path = moduleparams["path"]
-        local description = moduleparams["description"] or "No description."
-        local logo = moduleparams["logo"] or "assetmissing.png"
-        local options = moduleparams["options"]
-        local tables = moduleparams["tables"]
-
-        table.insert(sidebarobjects.authorname , author)
-        table.insert(sidebarobjects.modulename , name)
-        table.insert(sidebarobjects.modulepath , path)
-        table.insert(sidebarobjects.moduledescription , description)
-        table.insert(sidebarobjects.modulelogo , logo)
-        table.insert(sidebarobjects.moduleoptions , options)
-        table.insert(sidebarobjects.moduletables , tables)
+        sidebarobjects[author] = sidebarobjects[author] or {}
+        table.insert(sidebarobjects[author], {modulename, moduleparams})
 
         moduleindex = moduleindex + 1
-        sb.logInfo("" .. moduleindex)
       end
-      --table.sort(sidebarobjects.authorname, compare)
-      -- Sort authornames
-      -- Assuming that you have a list of authors in the authorname table, you could use the table.sort function to sort the table by authorname, like so:
 
-      --  -- Sort authorname table alphabetically
-      --table.sort(sidebarobjects.authorname)
-      --local sidebarobjectstemp = {authorname = {}, modulename = {}, modulepath = {}, moduledescription = {}, modulelogo = {}, moduleoptions = {}, moduletables = {}}
-      ---- Iterate through authorname table
-      --for i, v in ipairs(sidebarobjects.authorname) do
-      --  -- Get the index of the current author
-      --  local index = i - 1
-      --
-      --  -- Rearrange the other tables in sync with the changes in authorname table
-      --  sidebarobjectstemp.modulename[index] = sidebarobjects.modulename[v]
-      --  sidebarobjectstemp.modulepath[index] = sidebarobjects.modulepath[v]
-      --  sidebarobjectstemp.moduledescription[index] = sidebarobjects.moduledescription[v]
-      --  sidebarobjectstemp.modulelogo[index] = sidebarobjects.modulelogo[v]
-      --  sidebarobjectstemp.moduleoptions[index] = sidebarobjects.moduleoptions[v]
-      --  sidebarobjectstemp.moduletables[index] = sidebarobjects.moduletables[v]
-      --end
-      --sidebarobjects = sidebarobjectstemp
-
-      -- does not work rn, sorry :c
-
+      local authors = {}
+      for k in next, sidebarobjects do
+        table.insert(authors, k)
+      end
+      table.sort(authors)
 
       local sidebarobjectsindex = 1
-      local oldAuthor = "z" -- z, as it is the last letter
       local parentName = "sidebarscrollarea"
 
       local placeholderName = parentName .. ".placeholder"
@@ -117,16 +85,14 @@ local function populate()
         type = "image",
         file = "/assetmissing.png",
         zlevel = 5,
-        maxSize	= {0,0},
+        maxSize	= {0, 0},
         position = {0, 0}
       }, placeholderName)
 
-      for i = 1, moduleindex do
-        sb.logInfo("Author: " .. sidebarobjects.authorname[i])
-        sb.logInfo("name: " .. sidebarobjects.modulename[i])
-        if oldAuthor ~= sidebarobjects.authorname[i] then
-
-          local size = root.imageSize("/neon/starloader/core/starhub/gui/arrow-down.png")
+      for i = 1, #authors do
+        local author = authors[i]
+        local modules = sidebarobjects[author]
+        local size = root.imageSize("/neon/starloader/core/starhub/gui/arrow-down.png")
           size[1] = size[1] / 2
           size[2] = size[2] / 2
           local arrowName = parentName .. ".arrow" .. sidebarobjectsindex
@@ -134,23 +100,23 @@ local function populate()
             type = "image",
             file = "/neon/starloader/core/starhub/gui/arrow-down.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
             zlevel = 5,
-            maxSize	= {20,20},
-            position = {20, 10 + 40*-sidebarobjectsindex - 2}
+            maxSize	= {20, 20},
+            position = {20, 10 + 40 * -sidebarobjectsindex - 2}
           }, arrowName)
         
           local authorName = parentName .. ".author" .. sidebarobjectsindex
           widget.addChild(parentName, {
               type = "label",
-              value = sidebarobjects.authorname[i],
+              value = author,
               zlevel = 5,
               fontSize = 15,
-              position = {60, 10 + 40*-sidebarobjectsindex}
+              position = {60, 10 + 40 * -sidebarobjectsindex}
           }, authorName)
-          sb.logInfo("nya: " .. sidebarobjectsindex)
-          oldAuthor = sidebarobjects.authorname[i]
           sidebarobjectsindex = sidebarobjectsindex + 1
-        end
-        local size = root.imageSize("/neon/starloader/core/starhub/gui/slider-on.png")
+        for j = 1, #modules do
+          local module = modules[j]
+          local modulename, moduleparams = module[1], module[2]
+          local size = root.imageSize("/neon/starloader/core/starhub/gui/slider-on.png")
         size[1] = size[1] / 2
         size[2] = size[2] / 2
         local sliderName = parentName .. ".slider" .. sidebarobjectsindex
@@ -158,23 +124,24 @@ local function populate()
           type = "image",
           file = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
           zlevel = 5,
-          maxSize	= {20,20},
-          position = {20, 10 + 40*-sidebarobjectsindex - 2}
+          maxSize	= {20, 20},
+          position = {20, 10 + 40 * -sidebarobjectsindex - 2}
         }, sliderName)
       
         local moduleName = parentName .. ".module" .. sidebarobjectsindex
         widget.addChild(parentName, {
             type = "label",
-            value = sidebarobjects.modulename[i],
+            value = modulename,
             zlevel = 5,
             fontSize = 15,
-            position = {60, 10 + 40*-sidebarobjectsindex}
+            position = {60, 10 + 40 * -sidebarobjectsindex}
         }, moduleName)
         sb.logInfo("nya: " .. sidebarobjectsindex)
         sidebarobjectsindex = sidebarobjectsindex + 1
+        end
       end
     end
-    --createWidgets("sidebarscrollarea",40)
+    --createWidgets("sidebarscrollarea", 40)
 
     starhubstaticloaded = true
   end

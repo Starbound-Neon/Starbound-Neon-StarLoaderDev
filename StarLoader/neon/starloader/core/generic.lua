@@ -5,12 +5,6 @@ local moduleconf
 local modulefuncs = {modulename = {}, init = {}, update = {}, uninit = {}, options = {}, tables = {}}
 local firstupdate = true
 
-local moduleIntervals = {}
-local coroutines = {}
-local intervals = {}
-local lastRan = {}
-
-
 function init(...)
     getConfig()
     sb.logInfo("\n["..mainconfig["logname"].."] [INIT] Loading " .. mainconfig["name"] .. " Config")
@@ -21,22 +15,16 @@ function init(...)
     loadModules()
     
     --sb.logInfo("%s", modulefuncs)
-
-    local init = modulefuncs.init
-    for i = 1, #init do
-        init[i](...)
+    local _init, _update, _uninit = init, update, uninit
+    local funcs = modulefuncs.init
+    for i = 1, #funcs do
+        init, update, uninit = nil, nil, nil
+        funcs[i](...)
     end
-end
-
--- Define a function to create and start a new coroutine
-function scheduleCoroutine(func, interval, ...)
-    local co = coroutine.create(func)
-    table.insert(coroutines, co)
-    coroutine.resume(co, ...)
+    init, update, uninit = _init, _update, _uninit
 end
 
 function update(...)
-    local currentTime = os.clock()
     -- Run the table access procedure
     if not tech then
         tech = os.__tech
@@ -45,8 +33,9 @@ function update(...)
         localAnimator = os.__localAnimator
     end
     -- Run the modules
-    local update = modulefuncs.update
-    for i = 1, #update do
+    local funcs = modulefuncs.update
+    local _init, _update, _uninit = init, update, uninit
+    for i = 1, #funcs do
         local canrun = true
         for table, enabled in pairs(modulefuncs.tables[i]) do
             if table == "tech" and enabled == true and not tech then
@@ -57,35 +46,25 @@ function update(...)
             end
         end
         if canrun == true then
-            -- Schedule a new coroutine for the current update function
-            scheduleCoroutine(update[i], ...)
+            init, update, uninit = nil, nil, nil
+            funcs[i](...)
         end 
         if canrun == false and firstupdate then
             sb.logWarn("\n["..mainconfig["logname"].."] [%s] Module dependency missing or could not load!\n["..mainconfig["logname"].."] [%s] Please check your modules.json or .patch file.",modulefuncs.modulename[i],modulefuncs.modulename[i])
         end
     end
+    init, update, uninit = _init, _update, _uninit
     firstupdate = false
-
-    -- Iterate over the coroutines table
-    for i = #coroutines, 1, -1 do
-        local co = coroutines[i]
-        if coroutine.status(co) == "dead" then
-            -- If the coroutine is dead, remove it from the tables
-            table.remove(coroutines, i)
-            intervals[co] = nil
-            lastRan[co] = nil
-        else
-            -- Resume the coroutine
-            coroutine.resume(co)
-        end
-    end
 end
 
 function uninit(...)
-    local uninit = modulefuncs.uninit
-    for i = 1, #uninit do
-        uninit[i](...)
+    local _init, _update, _uninit = init, update, uninit
+    local funcs = modulefuncs.uninit
+    for i = 1, #funcs do
+        init, update, uninit = nil, nil, nil
+        funcs[i](...)
     end
+    init, update, uninit = _init, _update, _uninit
 end
 
 
@@ -140,22 +119,25 @@ function getModules()
 end
 
 function loadModules()
+    local _init, _update, _uninit = init, update, uninit
+  
     for modulename, moduleparams in next, moduleconf.modules do
         if moduleparams["options"]["autostart"] then
-            local _init, _update, _uninit = init, update, uninit
-
+            init, update, uninit = nil, nil, nil
+            
             require(moduleparams["path"])
-
+            
             table.insert(modulefuncs.modulename, modulename)
             table.insert(modulefuncs.init,       init)
             table.insert(modulefuncs.update,     update)
             table.insert(modulefuncs.uninit,     uninit)
             table.insert(modulefuncs.options,    moduleparams["options"])
             table.insert(modulefuncs.tables,     moduleparams["tables"])
-
-            init, update, uninit = _init, _update, _uninit
         end
     end
+    
+    init, update, uninit = _init, _update, _uninit
+  
     sb.logInfo("\n["..mainconfig["logname"].."] [INIT] Modules loaded!")
 end
 

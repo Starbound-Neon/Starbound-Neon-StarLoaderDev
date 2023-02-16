@@ -1,3 +1,3 @@
 # StarLoader
-Private repo of StarLoader
+Development repo of StarLoader
 

@@ -10,7 +10,7 @@ local sidebar_content_width
 
 local firstupdate = true
 
-local check_interval = 1 -- check every 5 seconds
+local check_interval = 0.1 -- check every 5 seconds
 local timer = 0
 
 local starhubstaticloaded = false
@@ -83,7 +83,7 @@ local function populate()
       local placeholderName = parentName .. ".placeholder"
       widget.addChild(parentName, {
         type = "image",
-        file = "/assetmissing.png",
+        file = "",
         zlevel = 5,
         maxSize	= {0, 0},
         position = {0, 0}
@@ -95,13 +95,29 @@ local function populate()
         local size = root.imageSize("/neon/starloader/core/starhub/gui/arrow-down.png")
           size[1] = size[1] / 2
           size[2] = size[2] / 2
+
+          local backButtonName = parentName .. ".backbutton" .. sidebarobjectsindex
+          widget.addChild(parentName, {
+            type = "button",
+            base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
+            hover = "/neon/starloader/core/starhub/gui/pixel.png?multiply=222222BB?scalenearest=" .. sidebar_width .. ";40",
+            pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=" .. sidebar_width .. ";40",
+            disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
+            pressedOffset = {0, 0},
+            callback = "test",
+            zlevel = 3,
+            maxSize	= {40, sidebar_width},
+            position = {0, 40 * -sidebarobjectsindex - 2}
+          }, backButtonName)
+
           local arrowName = parentName .. ".arrow" .. sidebarobjectsindex
           widget.addChild(parentName, {
             type = "image",
             file = "/neon/starloader/core/starhub/gui/arrow-down.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
             zlevel = 5,
             maxSize	= {20, 20},
-            position = {20, 10 + 40 * -sidebarobjectsindex - 2}
+            position = {20, 10 + 40 * -sidebarobjectsindex - 2},
+            mouseTransparent = true
           }, arrowName)
         
           local authorName = parentName .. ".author" .. sidebarobjectsindex
@@ -110,22 +126,40 @@ local function populate()
               value = author,
               zlevel = 5,
               fontSize = 15,
-              position = {60, 10 + 40 * -sidebarobjectsindex}
+              position = {60, 10 + 40 * -sidebarobjectsindex},
+              mouseTransparent = true
           }, authorName)
           sidebarobjectsindex = sidebarobjectsindex + 1
+
         for j = 1, #modules do
           local module = modules[j]
           local modulename, moduleparams = module[1], module[2]
           local size = root.imageSize("/neon/starloader/core/starhub/gui/slider-on.png")
         size[1] = size[1] / 2
         size[2] = size[2] / 2
+
+        local backButtonName = parentName .. ".backbutton" .. sidebarobjectsindex
+        widget.addChild(parentName, {
+          type = "button",
+          base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
+          hover = "/neon/starloader/core/starhub/gui/pixel.png?multiply=222222BB?scalenearest=" .. sidebar_width .. ";40",
+          pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=" .. sidebar_width .. ";40",
+          disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
+          pressedOffset = {0, 0},
+          callback = "test",
+          zlevel = 3,
+          maxSize	= {40, sidebar_width},
+          position = {0, 40 * -sidebarobjectsindex - 2}
+        }, backButtonName)
+
         local sliderName = parentName .. ".slider" .. sidebarobjectsindex
         widget.addChild(parentName, {
           type = "image",
           file = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
           zlevel = 5,
           maxSize	= {20, 20},
-          position = {20, 10 + 40 * -sidebarobjectsindex - 2}
+          position = {20, 10 + 40 * -sidebarobjectsindex - 2},
+          mouseTransparent = true
         }, sliderName)
       
         local moduleName = parentName .. ".module" .. sidebarobjectsindex
@@ -134,9 +168,9 @@ local function populate()
             value = modulename,
             zlevel = 5,
             fontSize = 15,
-            position = {60, 10 + 40 * -sidebarobjectsindex}
+            position = {60, 10 + 40 * -sidebarobjectsindex},
+            mouseTransparent = true
         }, moduleName)
-        sb.logInfo("nya: " .. sidebarobjectsindex)
         sidebarobjectsindex = sidebarobjectsindex + 1
         end
       end
@@ -147,6 +181,9 @@ local function populate()
   end
 end
 
+function test(widgetname, widgetdata)
+  sb.logInfo("%s, %s", widgetname, widgetdata)
+end
 
 function init()
   firstupdate = true
@@ -213,8 +250,8 @@ function update(dt)
   timer = timer + dt
   if timer >= check_interval then
     timer = 0
-    local ToSmall = widget.getChildAt({screen_size_x-1, screen_size_y-1})
-    local ToBig = widget.getChildAt({screen_size_x+1, screen_size_y+1})
+    local ToSmall = widget.getChildAt({screen_size_x-2, screen_size_y-2})
+    local ToBig = widget.getChildAt({screen_size_x+2, screen_size_y+2})
     if ToSmall and not ToBig then
     else
       firstupdate = true

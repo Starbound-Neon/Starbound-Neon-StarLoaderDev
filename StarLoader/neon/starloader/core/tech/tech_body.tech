@@ -4,7 +4,7 @@
   "scripts" : ["tech.lua"],
   "animator" : "/stats/effects/ufobeamstun/ufobeamstun.animation",
   "shortDescription" : "StarLoader Body",
-  "description" : "Functional grabber",
+  "description" : "StarLoader Functional grabber",
   "rarity" : "Legendary",
-  "icon" : "/items/generic/other/techcard.png"
+  "icon" : "/neon/starloader/core/starhub/gui/cursor/neon.png"
 }

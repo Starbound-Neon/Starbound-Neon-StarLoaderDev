@@ -20,6 +20,10 @@
         "type": "image",
         "zlevel": 0
       },
+      "contentscrollarea": {
+        "type": "scrollArea",
+        "zlevel": 2
+      },
       "sidebar": {
         "type": "image",
         "zlevel": 1

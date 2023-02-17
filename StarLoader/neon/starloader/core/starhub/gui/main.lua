@@ -18,7 +18,9 @@ local starhubstaticloaded = false
 local slMainConf
 local slModuleConf
 
-local sidebarobjects = {authorname = {}, modulename = {}, modulepath = {}, moduledescription = {}, modulelogo = {}, moduleoptions = {}, moduletables = {}}
+local sidebarobjects = {}
+local parentName = ""
+local authors = {}
 
 local function populate()
   sidebar_width = math.min(350, screen_size_x / 3)
@@ -39,6 +41,9 @@ local function populate()
 
     widget.setSize("sidebarscrollarea", {sidebar_width, screen_size_y - 2 * label_height})
     widget.setPosition("sidebarscrollarea", {0, label_height})
+
+    widget.setSize("contentscrollarea", {screen_size_x - sidebar_width, screen_size_y})
+    widget.setPosition("contentscrollarea", {sidebar_width, 0})
 
     local size = root.imageSize("/neon/starloader/core/starhub/gui/starhub.png")
     size[1] = size[1] / 2
@@ -71,14 +76,14 @@ local function populate()
         moduleindex = moduleindex + 1
       end
 
-      local authors = {}
+      authors = {}
       for k in next, sidebarobjects do
         table.insert(authors, k)
       end
       table.sort(authors)
 
       local sidebarobjectsindex = 1
-      local parentName = "sidebarscrollarea"
+      parentName = "sidebarscrollarea"
 
       local placeholderName = parentName .. ".placeholder"
       widget.addChild(parentName, {
@@ -96,7 +101,7 @@ local function populate()
           size[1] = size[1] / 2
           size[2] = size[2] / 2
 
-          local backButtonName = parentName .. ".backbutton" .. sidebarobjectsindex
+          local backButtonName = parentName .. ".author." .. author
           widget.addChild(parentName, {
             type = "button",
             base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
@@ -120,7 +125,7 @@ local function populate()
             mouseTransparent = true
           }, arrowName)
         
-          local authorName = parentName .. ".author" .. sidebarobjectsindex
+          local authorName = parentName .. ".authorname" .. sidebarobjectsindex
           widget.addChild(parentName, {
               type = "label",
               value = author,
@@ -138,7 +143,7 @@ local function populate()
         size[1] = size[1] / 2
         size[2] = size[2] / 2
 
-        local backButtonName = parentName .. ".backbutton" .. sidebarobjectsindex
+        local backButtonName = parentName .. ".module." .. modulename
         widget.addChild(parentName, {
           type = "button",
           base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
@@ -162,7 +167,7 @@ local function populate()
           mouseTransparent = true
         }, sliderName)
       
-        local moduleName = parentName .. ".module" .. sidebarobjectsindex
+        local moduleName = parentName .. ".modulename" .. sidebarobjectsindex
         widget.addChild(parentName, {
             type = "label",
             value = modulename,
@@ -183,6 +188,89 @@ end
 
 function test(widgetname, widgetdata)
   sb.logInfo("%s, %s", widgetname, widgetdata)
+  local calledButtonName = ""
+  local calledButtonDescription = ""
+  local size
+  local logo
+  if string.find(widgetname,"sidebarscrollarea.module.") then
+    calledButtonName = string.gsub(widgetname, "sidebarscrollarea.module.", "")
+    for i = 1, #authors do
+      local author = authors[i]
+      local modules = sidebarobjects[author]
+      for j = 1, #modules do
+        local module = modules[j]
+        local modulename, moduleparams = module[1], module[2]
+        if modulename == calledButtonName then
+          calledButtonDescription = "This is a Module.\n" .. moduleparams["description"] or "This is a Module.\nNo Description."
+          logo = moduleparams["logo"]
+          size = root.imageSize(logo)
+          size[1] = size[1] / 2
+          size[2] = size[2] / 2
+          break
+        end
+      end
+    end
+  else
+    calledButtonName = string.gsub(widgetname, "sidebarscrollarea.author.", "")
+    calledButtonDescription = "This is a Author.\nAuthor Modules: "
+    for i = 1, #authors do
+      local author = authors[i]
+      if author == calledButtonName then
+        logo = "/neon/starloader/core/starhub/gui/logo-smol.png"
+        size = root.imageSize(logo)
+        size[1] = size[1] / 2
+        size[2] = size[2] / 2
+        local modules = sidebarobjects[author]
+        for j = 1, #modules do
+          local module = modules[j]
+          local modulename, moduleparams = module[1], module[2]
+          calledButtonDescription = calledButtonDescription .. modulename .. " "
+        end
+        break
+      end
+    end
+  end
+
+
+  parentName = "contentscrollarea"
+  widget.removeAllChildren("contentscrollarea")
+  local placeholderName = parentName .. ".placeholder"
+  widget.addChild(parentName, {
+    type = "image",
+    file = "",
+    zlevel = 5,
+    maxSize	= {0, 0},
+    position = {0, 0}
+  }, placeholderName)
+
+  local moduleLogo = parentName .. ".logo"
+  widget.addChild(parentName, {
+    type = "image",
+    file = logo .. "?scalenearest=" .. math.min(60 / size[1], 60 / size[2]),
+    zlevel = 5,
+    maxSize	= {60, 60},
+    position = {20, -80},
+    mouseTransparent = true
+  }, moduleLogo)
+  local moduleName = parentName .. ".name"
+  widget.addChild(parentName, {
+    type = "label",
+    value = calledButtonName,
+    zlevel = 5,
+    fontSize = 20,
+    position = {100, -48},
+    mouseTransparent = true
+  }, moduleName)
+  local moduleDescription = parentName .. ".description"
+  widget.addChild(parentName, {
+    type = "label",
+    value = calledButtonDescription,
+    zlevel = 5,
+    fontSize = 10,
+    position = {100, -73},
+    mouseTransparent = true
+  }, moduleDescription)
+  
 end
 
 function init()
@@ -290,7 +378,7 @@ function createWidgets(parentName, numWidgets)
   local placeholderName = parentName .. ".placeholder"
   widget.addChild(parentName, {
     type = "image",
-    file = "/assetmissing.png",
+    file = "",
     zlevel = 5,
     maxSize	= {0,0},
     position = {0, 0}

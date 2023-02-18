@@ -157,7 +157,21 @@ local function populate()
           position = {0, 40 * -sidebarobjectsindex - 2}
         }, backButtonName)
 
-        local sliderName = parentName .. ".slider" .. sidebarobjectsindex
+        local backButtonName = parentName .. ".moduleslider." .. modulename
+        widget.addChild(parentName, {
+          type = "button",
+          base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=20;20",
+          hover = "/neon/starloader/core/starhub/gui/pixel.png?multiply=222222BB?scalenearest=20;20",
+          pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=20;20",
+          disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=20;20",
+          pressedOffset = {0, 0},
+          callback = "test",
+          zlevel = 4,
+          maxSize	= {20, 20},
+          position = {20, 10 + 40 * -sidebarobjectsindex - 2}
+        }, backButtonName)
+
+        local sliderName = parentName .. ".slider." .. modulename
         widget.addChild(parentName, {
           type = "image",
           file = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
@@ -192,6 +206,16 @@ function test(widgetname, widgetdata)
   local calledButtonDescription = ""
   local size
   local logo
+  if string.find(widgetname,"sidebarscrollarea.moduleslider.") then
+    calledButtonName = string.gsub(widgetname, "sidebarscrollarea.moduleslider.", "")
+    size = root.imageSize("/neon/starloader/core/starhub/gui/slider-on.png")
+    size[1] = size[1] / 2
+    size[2] = size[2] / 2
+    local switch = "sidebarscrollarea.slider." .. calledButtonName
+    widget.setImage(switch, "/neon/starloader/core/starhub/gui/slider-off.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]))
+    
+    return
+  end
   if string.find(widgetname,"sidebarscrollarea.module.") then
     calledButtonName = string.gsub(widgetname, "sidebarscrollarea.module.", "")
     for i = 1, #authors do

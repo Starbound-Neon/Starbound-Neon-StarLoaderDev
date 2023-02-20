@@ -57,6 +57,12 @@ local function populate()
 
     widget.setImage("sidebar_footer", "/neon/starloader/core/starhub/gui/pixel.png?multiply=000000FF?scalenearest=" .. sidebar_width .. ";" .. label_height)
 
+    widget.setPosition("sidebar_disclaimer", {0,0})
+
+
+    --"This is an\nEXPERIMENTAL\nversion.\nNot finished!\nStuff WILL change."
+    --sidebar_disclaimer
+
     --widget.setImage("separator", "/neon/starloader/core/starhub/gui/line.png?multiply=00000000?scale=" .. 1 .. ";" .. screen_size_y / 2) --?multiply=00000000
     --widget.setPosition("separator", {sidebar_width, 0})
 
@@ -109,7 +115,7 @@ local function populate()
             pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=" .. sidebar_width .. ";40",
             disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
             pressedOffset = {0, 0},
-            callback = "test",
+            callback = "sidebarPress",
             zlevel = 3,
             maxSize	= {40, sidebar_width},
             position = {0, 40 * -sidebarobjectsindex - 2}
@@ -151,7 +157,7 @@ local function populate()
           pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=" .. sidebar_width .. ";40",
           disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=" .. sidebar_width .. ";40",
           pressedOffset = {0, 0},
-          callback = "test",
+          callback = "sidebarPress",
           zlevel = 3,
           maxSize	= {40, sidebar_width},
           position = {0, 40 * -sidebarobjectsindex - 2}
@@ -160,26 +166,26 @@ local function populate()
         local backButtonName = parentName .. ".moduleslider." .. modulename
         widget.addChild(parentName, {
           type = "button",
-          base = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=20;20",
-          hover = "/neon/starloader/core/starhub/gui/pixel.png?multiply=222222BB?scalenearest=20;20",
-          pressed = "/neon/starloader/core/starhub/gui/pixel.png?multiply=333333BB?scalenearest=20;20",
-          disabledImage = "/neon/starloader/core/starhub/gui/pixel.png?multiply=00000000?scalenearest=20;20",
+          base = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(10 / size[1], 10 / size[2]),
+          hover = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(10 / size[1], 10 / size[2]),
+          pressed = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(10 / size[1], 10 / size[2]),
+          disabledImage = "/neon/starloader/core/starhub/gui/slider-off.png?scalenearest=" .. math.min(10 / size[1], 10 / size[2]),
           pressedOffset = {0, 0},
-          callback = "test",
-          zlevel = 4,
+          callback = "sliderPress",
+          zlevel = 5,
           maxSize	= {20, 20},
           position = {20, 10 + 40 * -sidebarobjectsindex - 2}
         }, backButtonName)
 
-        local sliderName = parentName .. ".slider." .. modulename
-        widget.addChild(parentName, {
-          type = "image",
-          file = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
-          zlevel = 5,
-          maxSize	= {20, 20},
-          position = {20, 10 + 40 * -sidebarobjectsindex - 2},
-          mouseTransparent = true
-        }, sliderName)
+        -- local sliderName = parentName .. ".slider." .. modulename
+        -- widget.addChild(parentName, {
+        --   type = "image",
+        --   file = "/neon/starloader/core/starhub/gui/slider-on.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]),
+        --   zlevel = 5,
+        --   maxSize	= {20, 20},
+        --   position = {20, 10 + 40 * -sidebarobjectsindex - 2},
+        --   mouseTransparent = true
+        -- }, sliderName)
       
         local moduleName = parentName .. ".modulename" .. sidebarobjectsindex
         widget.addChild(parentName, {
@@ -199,23 +205,23 @@ local function populate()
     starhubstaticloaded = true
   end
 end
-
-function test(widgetname, widgetdata)
+function sliderPress(widgetname, widgetdata)
   sb.logInfo("%s, %s", widgetname, widgetdata)
-  local calledButtonName = ""
-  local calledButtonDescription = ""
-  local size
-  local logo
   if string.find(widgetname,"sidebarscrollarea.moduleslider.") then
     calledButtonName = string.gsub(widgetname, "sidebarscrollarea.moduleslider.", "")
     size = root.imageSize("/neon/starloader/core/starhub/gui/slider-on.png")
     size[1] = size[1] / 2
     size[2] = size[2] / 2
-    local switch = "sidebarscrollarea.slider." .. calledButtonName
-    widget.setImage(switch, "/neon/starloader/core/starhub/gui/slider-off.png?scalenearest=" .. math.min(20 / size[1], 20 / size[2]))
-    
     return
   end
+end
+
+function sidebarPress(widgetname, widgetdata)
+  sb.logInfo("%s, %s", widgetname, widgetdata)
+  local calledButtonName = ""
+  local calledButtonDescription = ""
+  local size
+  local logo
   if string.find(widgetname,"sidebarscrollarea.module.") then
     calledButtonName = string.gsub(widgetname, "sidebarscrollarea.module.", "")
     for i = 1, #authors do
@@ -225,7 +231,7 @@ function test(widgetname, widgetdata)
         local module = modules[j]
         local modulename, moduleparams = module[1], module[2]
         if modulename == calledButtonName then
-          calledButtonDescription = "This is a Module.\n" .. moduleparams["description"] or "This is a Module.\nNo Description."
+          calledButtonDescription = "This is a Module.\n" .. moduleparams["description"] or "This is an Module.\nNo Description."
           logo = moduleparams["logo"]
           size = root.imageSize(logo)
           size[1] = size[1] / 2
@@ -236,7 +242,7 @@ function test(widgetname, widgetdata)
     end
   else
     calledButtonName = string.gsub(widgetname, "sidebarscrollarea.author.", "")
-    calledButtonDescription = "This is a Author.\nAuthor Modules: "
+    calledButtonDescription = "This is an Author.\nAuthor Modules: "
     for i = 1, #authors do
       local author = authors[i]
       if author == calledButtonName then
